@@ -11,8 +11,33 @@ class MoviesController < ApplicationController
   end
 
   def index
+    # Grabs the list of all ratings from the movie model.
+    @all_ratings        = Movie.all_ratings
+    
+    # Handles persistent checkbox criterion.
+    if params[:ratings].present?
+      if params[:ratings].keys.sort != session[:q_ratings].sort
+        session[:q_ratings] = params[:ratings].keys
+      end
+    else
+      session[:q_ratings] ||= @all_ratings
+    end
+    
+    # Handles persistent sorting criterion.
+    if params[:sort].present?
+      if params[:sort] != session[:s_params]
+        session[:s_params] = params[:sort]
+      end
+    end
+    
+    # Assures that only session-checked boxes are rendered.
+    @checked_boxes = session[:q_ratings]
+    
+    # Helps render the yellow background
+    @clicked       = session[:s_params]
+    
     # Carries out the page DB query.
-    @movies = Movie.order(params[:sort])
+    @movies = Movie.with_ratings(session[:q_ratings]).order(session[:s_params])
   end
 
   def new
