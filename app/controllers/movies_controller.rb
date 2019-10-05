@@ -11,7 +11,8 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+    # Carries out the page DB query.
+    @movies = Movie.order(params[:sort])
   end
 
   def new
