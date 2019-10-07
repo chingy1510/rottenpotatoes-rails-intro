@@ -13,6 +13,7 @@ class MoviesController < ApplicationController
   def index
     # Grabs the list of all ratings from the movie model.
     @all_ratings        = Movie.all_ratings
+    session[:s_params]  ||= []
     
     # Handles persistent checkbox criterion.
     if params[:ratings].present?
